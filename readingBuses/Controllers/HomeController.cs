@@ -13,25 +13,28 @@ namespace readingBuses.Controllers
 {
     public class HomeController : AsyncController
     {
+        // yuk
         static readonly Configuration Config = new Configuration();
 
+        // ugh get rid
         static Dictionary<NamedRoute, TargetStop[]> NamedRoutes;
 
-        public async Task<ActionResult> Index()
+        public ActionResult Index()
         {
-            // todo - move
-            var folder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            var path = Path.Combine(folder, @"namedRoutes.json");
-            if (System.IO.File.Exists(path))
-                NamedRoutes = Utility.LoadFromFile<List<KeyValuePair<NamedRoute, TargetStop[]>>>(path).ToDictionary(r => r.Key, r => r.Value);
-            else
-                NamedRoutes = NamedRoutes_DJW.BuildNamedRoutes();
+            GetRoutes();
+            var model = NamedRoutes.Select(p => p.Key.ToString()).ToArray();
+            return View(model);
+        }
 
-            if (NamedRoutes == null || NamedRoutes.Count == 0)
-                throw new InvalidOperationException("Need at least one route");
+        public async Task<ActionResult> Summary(string routeName)
+        {
+            GetRoutes();
 
             NamedRoute namedRoute = NamedRoute.Unknown;
-            namedRoute = NamedRoute.WorkToHome;
+
+            namedRoute = (NamedRoute)Enum.Parse(typeof(NamedRoute), routeName);
+
+            //namedRoute = NamedRoute.WorkToHome;
             //// todo get named route from command line or use current location
             //if (namedRoute == NamedRoute.Unknown)
             //{
@@ -51,11 +54,25 @@ namespace readingBuses.Controllers
             var model = new TimetableSummary
             {
                 UserId = "dan",
+                Route = namedRoute,
                 TimeStamp = now,
                 Departures = departures.Select(ss => MapToDeparture(ss, now)).ToArray(),
             };
 
             return View(model);
+        }
+
+        private static void GetRoutes()
+        {
+            var folder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            var path = Path.Combine(folder, @"namedRoutes.json");
+            if (System.IO.File.Exists(path))
+                NamedRoutes = Utility.LoadFromFile<List<KeyValuePair<NamedRoute, TargetStop[]>>>(path).ToDictionary(r => r.Key, r => r.Value);
+            else
+                NamedRoutes = NamedRoutes_DJW.BuildNamedRoutes();
+
+            if (NamedRoutes == null || NamedRoutes.Count == 0)
+                throw new InvalidOperationException("Need at least one route");
         }
 
         static Departure MapToDeparture(SuggestedStop bus, DateTime now)

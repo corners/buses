@@ -1,4 +1,4 @@
-﻿@model readingBuses.Models.TimetableSummary
+﻿@model string[]
 
 @*<div class="jumbotron">
     <h1>ASP.NET</h1>
@@ -8,29 +8,12 @@
 
 <div class="row">
     <div class="col-md-4">
-        <h2>Departures for @Model.UserId</h2>
-        <p>
-        </p>
-
-        <table>
-            <thead>
-                <th>Departs</th>
-                <th>Service</th>
-                <th>Destination</th>
-                <th>Stop</th>
-                <th>Reachable</th>
-            </thead>
-            @foreach (var departure in Model.Departures)
-            {
-            <tr>
-                <td>@departure.DepartsIn</td>
-                <td>@departure.Service</td>
-                <td>@departure.Destination</td>
-                <td>@departure.BusStop</td>
-                <td>@departure.Reachable</td>
-            </tr>
-            }
-        </table>
-
+        @using (Html.BeginForm("Summary", "Home"))
+        { 
+            <fieldset>
+                @Html.ListBox("routeName", Model.Select(s => new SelectListItem { Text = s, Value = s }))
+                <input type="submit" value="Submit" />
+            </fieldset>
+        }
     </div>
 </div>

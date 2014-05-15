@@ -1,0 +1,37 @@
+﻿@model readingBuses.Models.TimetableSummary
+
+@*<div class="jumbotron">
+    <h1>ASP.NET</h1>
+    <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
+    <p><a href="http://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
+</div>*@
+
+<div class="row">
+    <div class="col-md-4">
+        <h2>Departures for @Model.UserId</h2>
+        <p>
+            @Model.Route
+        </p>
+
+        <table>
+            <tr>
+                <th>Departs</th>
+                <th>Service</th>
+                <th>Destination</th>
+                <th>Stop</th>
+                <th>Reachable</th>
+            </tr>
+            @foreach (var departure in Model.Departures)
+            {
+            <tr>
+                <td>@departure.DepartsIn</td>
+                <td>@departure.Service</td>
+                <td>@departure.Destination</td>
+                <td>@departure.BusStop</td>
+                <td>@departure.Reachable</td>
+            </tr>
+            }
+        </table>
+
+    </div>
+</div>
