@@ -6,6 +6,8 @@
 *.user
 *.sln.docstates
 
+NamedRoutes-DJW.*
+
 # Build results
 [Dd]ebug/
 [Dd]ebugPublic/
