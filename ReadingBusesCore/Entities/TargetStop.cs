@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Device.Location;
 using System.Linq;
 using System.Text;
@@ -12,6 +13,7 @@ namespace ReadingBusesCore
         /// <summary>
         /// Friendly name
         /// </summary>
+        [Key]
         public string Name { get; set; }
 
         /// <summary>

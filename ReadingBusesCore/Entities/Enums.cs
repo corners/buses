@@ -13,10 +13,10 @@ namespace ReadingBusesCore
         NotPossible,
     }
 
-    public enum NamedRoute
-    {
-        Unknown = 0,
-        HomeToWork,
-        WorkToHome
-    }
+    //public enum NamedRoute
+    //{
+    //    Unknown = 0,
+    //    HomeToWork,
+    //    WorkToHome
+    //}
 }

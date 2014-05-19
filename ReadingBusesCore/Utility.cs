@@ -47,6 +47,32 @@ namespace ReadingBusesCore
             }
         }
 
+        public static string SaveToString<T>(T instance)
+        {
+            using (var textWriter = new StringWriter())
+            {
+                using (var writer = new JsonTextWriter(textWriter))
+                {
+                    var s = new JsonSerializer();
+                    s.Serialize(writer, instance);
+                }
+                return textWriter.ToString();
+            }
+        }
+
+        public static T LoadFromString<T>(string text)
+        {
+            using (var textReader = new StringReader(text))
+            {
+                using (var reader = new JsonTextReader(textReader))
+                {
+                    var s = new JsonSerializer();
+                    T result = s.Deserialize<T>(reader);
+                    return result;
+                }
+            }
+        }
+        
         public static string FriendlyTime(TimeSpan span)
         {
             string result;
