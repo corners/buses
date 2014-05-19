@@ -16,6 +16,18 @@ namespace ReadingBusesCore
 {
     public static class Utility
     {
+        /// <summary>
+        /// Convert to GMT Standard Time
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static DateTime ToUkTime(DateTime value)
+        {
+            TimeZoneInfo timeInfo = TimeZoneInfo.FindSystemTimeZoneById("GMT Standard Time");
+            var ukTime = TimeZoneInfo.ConvertTime(value, TimeZoneInfo.Utc, timeInfo);
+            return ukTime;
+        }
+
         public static void SaveToFile<T>(T instance, string path)
         {
             using (var fs = new FileStream(path, FileMode.Create))

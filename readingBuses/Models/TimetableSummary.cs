@@ -10,7 +10,9 @@ namespace readingBuses.Models
     {
         public string UserId { get; set; }
         public string Route { get; set; }
+
         public DateTime TimeStamp { get; set; }
+
         public Departure[] Departures { get; set; }
     }
 }

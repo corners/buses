@@ -34,7 +34,7 @@ namespace readingBuses.Controllers
                 var route = context.Routes.FirstOrDefault(r => r.Name.Equals(routeName, StringComparison.OrdinalIgnoreCase));
 
                 // Lookup buses
-                var now = DateTime.UtcNow;
+                var requestedUtc = Utility.ToUkTime(DateTime.UtcNow);
 
                 var busInfo = new BusInfo();
                 var departures = await busInfo.ListDeparturesAsync(route.TargetStops);
@@ -43,8 +43,8 @@ namespace readingBuses.Controllers
                 {
                     UserId = "",
                     Route = route.Name,
-                    TimeStamp = now,
-                    Departures = departures.Select(ss => MapToDeparture(ss, now)).ToArray(),
+                    TimeStamp = requestedUtc,
+                    Departures = departures.Select(ss => MapToDeparture(ss, requestedUtc)).ToArray(),
                 };
 
                 return View(model);
