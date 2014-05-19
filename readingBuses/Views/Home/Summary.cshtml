@@ -10,7 +10,7 @@
     <div class="col-md-4">
         <h2>@Model.Route</h2>
         <p>
-            Last updated at @Model.TimeStamp.ToString("HH:mm:ss")
+            Last updated at @Model.TimeStamp.ToLocalTime().ToString("HH:mm:ss K")
         </p>
 
         <table>

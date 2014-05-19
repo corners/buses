@@ -34,7 +34,7 @@ namespace readingBuses.Controllers
                 var route = context.Routes.FirstOrDefault(r => r.Name.Equals(routeName, StringComparison.OrdinalIgnoreCase));
 
                 // Lookup buses
-                var now = DateTime.Now;
+                var now = DateTime.UtcNow;
 
                 var busInfo = new BusInfo();
                 var departures = await busInfo.ListDeparturesAsync(route.TargetStops);
