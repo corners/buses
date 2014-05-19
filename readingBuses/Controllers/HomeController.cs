@@ -41,7 +41,7 @@ namespace readingBuses.Controllers
 
                 var model = new TimetableSummary
                 {
-                    UserId = "dan",
+                    UserId = "",
                     Route = route.Name,
                     TimeStamp = now,
                     Departures = departures.Select(ss => MapToDeparture(ss, now)).ToArray(),

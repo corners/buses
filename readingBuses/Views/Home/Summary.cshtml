@@ -8,17 +8,17 @@
 
 <div class="row">
     <div class="col-md-4">
-        <h2>Departures for @Model.UserId</h2>
+        <h2>@Model.Route</h2>
         <p>
-            @Model.Route
+            Last updated at @Model.TimeStamp.ToString("HH:mm:ss")
         </p>
 
         <table>
             <tr>
                 <th>Departs</th>
                 <th>Service</th>
-                <th>Destination</th>
                 <th>Stop</th>
+                <th>Destination</th>
                 <th>Reachable</th>
             </tr>
             @foreach (var departure in Model.Departures)
@@ -26,8 +26,8 @@
             <tr>
                 <td>@departure.DepartsIn</td>
                 <td>@departure.Service</td>
-                <td>@departure.Destination</td>
                 <td>@departure.BusStop</td>
+                <td>@departure.Destination</td>
                 <td>@departure.Reachable</td>
             </tr>
             }
