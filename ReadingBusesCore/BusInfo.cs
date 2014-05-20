@@ -44,8 +44,12 @@ namespace ReadingBusesCore
                 client.BaseAddress = new Uri("http://ods.reading-travelinfo.co.uk/");
                 client.DefaultRequestHeaders.Accept.Clear();
 
+                var json = new JsonMediaTypeFormatter();
+                json.SerializerSettings.DateFormatHandling = DateFormatHandling.IsoDateFormat;
+                json.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Local;
+
                 var formatters = new List<MediaTypeFormatter>() {
-                    new JsonMediaTypeFormatter(),
+                    json,
                 };
 
                 CallsAtStopResponse callsAtStop = await GetCallsAtStopAsync(targetStop.LocationId, client);

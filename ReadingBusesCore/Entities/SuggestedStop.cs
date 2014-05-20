@@ -13,6 +13,8 @@ namespace ReadingBusesCore
         public string LocationId { get; set; }
         public string LocationName { get; set; }
         public int TravelTimeInMinutes { get; set; }
+
+
         public DateTime ScheduledArrival { get; set; }
         public DateTime ScheduledDeparture { get; set; }
     }
