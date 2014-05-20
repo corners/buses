@@ -17,8 +17,8 @@ namespace ReadingBusesCore
                 LocationId = callAtStop.MonitoredLocation.Id,
                 LocationName = callAtStop.MonitoredLocation.Name,
                 TravelTimeInMinutes = targetStop.MinutesToLocation,
-                ScheduledArrival = call.ScheduledArrival.ToUniversalTime().UtcDateTime,
-                ScheduledDeparture = call.ScheduledDeparture.ToUniversalTime().UtcDateTime,
+                ScheduledArrival = call.ScheduledArrival,
+                ScheduledDeparture = call.ScheduledDeparture,
             };
         }
     }

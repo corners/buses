@@ -96,16 +96,22 @@ namespace ReadingBusesCore
             return result;
         }
 
-        public static LikelyhoodOfSuccess IsReachable(DateTime departure, DateTime now, int travelTimeInMinutes, double departureMarginInSecods)
+        public static LikelyhoodOfSuccess IsReachable(DateTime departureUtc, DateTime nowUtc, int travelTimeInMinutes, double departureMarginInSecods)
         {
-            var span = departure - now.AddMinutes(travelTimeInMinutes);
+            if (departureUtc.Kind != DateTimeKind.Utc)
+                throw new ArgumentException("Departure is not in UTC");
+            if (nowUtc.Kind != DateTimeKind.Utc)
+                throw new ArgumentException("Now is not in UTC");
 
+            var span = (departureUtc - nowUtc).TotalMinutes - travelTimeInMinutes;
+
+            var margin = Math.Floor(departureMarginInSecods / 60);
             LikelyhoodOfSuccess result;
-            if (Math.Abs(span.TotalSeconds) <= departureMarginInSecods)
+            if (Math.Abs(span) <= margin)
             {
                 result = LikelyhoodOfSuccess.Marginal;
             }
-            else if (span.TotalSeconds > departureMarginInSecods)
+            else if (span > margin)
             {
                 result = LikelyhoodOfSuccess.Likely;
             }
