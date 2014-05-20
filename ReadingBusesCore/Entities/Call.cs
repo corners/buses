@@ -11,7 +11,7 @@ namespace ReadingBusesCore
         public string Service { get; set; }
         public string PublishedServiceName { get; set; }
         public string Destination { get; set; }
-        public DateTime ScheduledArrival { get; set; }
-        public DateTime ScheduledDeparture { get; set; }
+        public DateTimeOffset ScheduledArrival { get; set; }
+        public DateTimeOffset ScheduledDeparture { get; set; }
     }
 }
