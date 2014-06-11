@@ -27,28 +27,62 @@ namespace readingBuses.Controllers
             }
         }
 
+        public ActionResult Index2()
+        {
+            return View();
+        }
+
+        public JsonResult RoutesJson()
+        {
+            using (var context = new Context())
+            {
+                var data = new
+                {
+                    Routes = context.Routes.Select(r => r.Name).OrderBy(s => s).ToList(),
+                    Closest = ""
+                };
+                return Json(data, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        public async Task<JsonResult> DeparturesJson(string routeName)
+        {
+            using (var context = new Context())
+            {
+                var model = await GetDepartures(routeName, context);
+
+                return Json(model, JsonRequestBehavior.AllowGet);
+            }
+        }
+
         public async Task<ActionResult> Summary(string routeName)
         {
             using (var context = new Context())
             {
-                var route = context.Routes.FirstOrDefault(r => r.Name.Equals(routeName, StringComparison.OrdinalIgnoreCase));
-
-                // Lookup buses
-                var requestedUtc = DateTime.UtcNow;
-
-                var busInfo = new BusInfo();
-                var departures = await busInfo.ListDeparturesAsync(route.TargetStops);
-
-                var model = new TimetableSummary
-                {
-                    UserId = "",
-                    Route = route.Name,
-                    TimeStamp = requestedUtc,
-                    Departures = departures.Select(ss => MapToDeparture(ss, requestedUtc)).ToArray(),
-                };
+                var model = await GetDepartures(routeName, context);
 
                 return View(model);
             }
+        }
+
+        private static async Task<TimetableSummary> GetDepartures(string routeName, Context context)
+        {
+            var route = context.Routes.FirstOrDefault(r => r.Name.Equals(routeName, StringComparison.OrdinalIgnoreCase));
+
+            // Lookup buses
+            var requestedUtc = DateTime.UtcNow;
+
+            var busInfo = new BusInfo();
+            var departures = await busInfo.ListDeparturesAsync(route.TargetStops);
+
+            var model = new TimetableSummary
+            {
+                UserId = "",
+                Route = route.Name,
+                TimeStamp = requestedUtc,
+                Departures = departures.Select(ss => MapToDeparture(ss, requestedUtc)).ToArray(),
+            };
+            return model;
         }
 
 
