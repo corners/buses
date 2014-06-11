@@ -13,6 +13,15 @@ using System.Web.Mvc;
 
 namespace readingBuses.Controllers
 {
+    // todo move script and view model into shared / partial
+    // finish css
+    // Rename HomeController to Departures
+    // Strip out unnecessary code (bootstrap, etc)
+    // Should route name be an MvcRoute parameter instead of in query string...?
+    // Optimise initial loading time of Departure pages
+    // Optimise route & departure lookup
+
+
     public class HomeController : AsyncController
     {
         // yuk
@@ -27,9 +36,15 @@ namespace readingBuses.Controllers
             }
         }
 
-        public ActionResult Index2()
+        public ActionResult Departures()
         {
             return View();
+        }
+
+        public ActionResult DeparturesForRoute(string name)
+        {
+            var model = new DeparturesForRoute { RouteName = name };
+            return View(model);
         }
 
         public JsonResult RoutesJson()

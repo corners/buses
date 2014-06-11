@@ -26,6 +26,12 @@ namespace readingBuses
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
                       "~/Content/site.css"));
+            
+            // todo remove stuff from standard template (i.e. all above this comment)
+
+            bundles.Add(new StyleBundle("~/Content/css2").Include(
+                        "~/Content/reset.css",
+                        "~/Content/departures.css"));
 
             bundles.Add(new ScriptBundle("~/bundles/knockoutjs").Include(
                         "~/Scripts/jquery-{version}.js",

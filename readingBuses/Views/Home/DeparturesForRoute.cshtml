@@ -1,33 +1,31 @@
 ﻿@{
     Layout = null;
 }
-
 <!DOCTYPE html>
-
 <html>
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
-    <title>Reading Bus Times</title>
+    <title>Reading Bus Departure Times</title>
+    @Styles.Render("~/Content/css2")
 </head>
 <body>
-    <h2>
+    @*<h1>
         Routes
-    </h2>
-    <div>
-        <select data-bind="options: routes,
+    </h1>
+    <div>*@
+        @*<select data-bind="options: routes,
                             value: selectedRoute,
-                            optionsCaption: 'Choose...'" autofocus></select>
+                            optionsCaption: 'Choose...'" autofocus></select>*@
         @*<p data-bind="text: selectedRoute() ? selectedRoute() : 'unknown' ">
-        </p>*@
-    </div>
+            </p>*@
+    @*</div>*@
+    <h1>
+        @Model.RouteName
+    </h1>
+    <h2>Departures</h2>
     <div data-bind="if: selectedRoute()">
         <div data-bind="if: !locker()">
-            <h2>
-                Departures
-            </h2>
-            <p>Route: <span data-bind="text: departureRoute"></span></p>
-            <p>Updated: <span data-bind="text: lastUpdated"></span></p>
             <table>
                 <thead>
                     <tr>
@@ -48,6 +46,8 @@
                     </tr>
                 </tbody>
             </table>
+            <p>Updated: <span data-bind="text: lastUpdated"></span></p>
+            <button data-bind="click: refreshDepartures">Refresh</button>
         </div>
         <div data-bind="if: locker()">
             Loading...
@@ -90,15 +90,18 @@
                 self.getDepartures = function (route) {
                     self.departures = ko.observableArray();
                     if (route) {
+                        var start = new Date().getTime();
                         self = this;
-                        context.locker(true); //lock list 
+                        context.locker(true); //lock list
                         $.getJSON("DeparturesJson", { routeName: route }
                             ).done(function (data) {
                                 $.each(data.Departures, function (key, value) {
                                     model.addDeparture(value.DepartsIn, value.Service, value.BusStop, value.Destination, value.Reachable);
                                 });
-                                self.lastUpdated(data.Timestamp);
                                 self.departureRoute(data.Route);
+                            }).done(function (data) {
+                                var time_ms = (new Date().getTime()) - start;
+                                self.lastUpdated(new Date(parseInt(data.TimeStamp.substr(6))) + '. Data retrieved in ' + time_ms + 'ms');
                             }).fail(function () {
                                 console.log("fail");
                             }).always(function () {
@@ -112,15 +115,20 @@
                 /// The server time the departures were last updated
                 self.lastUpdated = ko.observable('');
 
+                self.refreshDepartures = function () {
+                    self.getDepartures(self.selectedRoute());
+                };
+
+                /// Required to trigger getting the departure list
                 self.itemsTrigger = ko.computed(function () {
                     return self.getDepartures(self.selectedRoute());
                 }, this);
-
             }
 
             var model = new BusDepartureViewModel();
             ko.applyBindings(model);
-            model.getRoutes();
+            //model.getRoutes();
+            model.selectedRoute('@Model.RouteName');
         })($, ko);
     </script>
 </body>
