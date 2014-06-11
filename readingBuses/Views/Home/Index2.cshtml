@@ -70,6 +70,19 @@
                 self.addRoute = function (name) {
                     self.routes.push(name);
                 };
+
+                self.getRoutes = function () {
+                    $.getJSON("RoutesJson"
+                        ).done(function (data) {
+                            $.each(data.Routes, function (key, value) {
+                                model.addRoute(value);
+                            });
+                            model.selectedRoute("");
+                        }).fail(function () {
+                            console.log('fail');
+                        });
+                };
+
                 self.addDeparture = function (departsIn, service, busStop, destination, reachable) {
                     self.departures.push({ DepartsIn: departsIn, Service: service, BusStop: busStop, Destination: destination, Reachable: reachable });
                 };
@@ -79,24 +92,21 @@
                     if (route) {
                         self = this;
                         context.locker(true); //lock list 
-                        var jqxhr = $.getJSON("DeparturesJson", { routeName: route }, function (data) {
-                            console.log("done");
-                        })
-                        .done(function (data) {
-                            $.each(data.Departures, function (key, value) {
-                                model.addDeparture(value.DepartsIn, value.Service, value.BusStop, value.Destination, value.Reachable);
+                        $.getJSON("DeparturesJson", { routeName: route }
+                            ).done(function (data) {
+                                $.each(data.Departures, function (key, value) {
+                                    model.addDeparture(value.DepartsIn, value.Service, value.BusStop, value.Destination, value.Reachable);
+                                });
+                                self.lastUpdated(data.Timestamp);
+                                self.departureRoute(data.Route);
+                            }).fail(function () {
+                                console.log("fail");
+                            }).always(function () {
+                                context.locker(false);  //unlock list
                             });
-                            self.lastUpdated(data.Timestamp);
-                            self.departureRoute(data.Route);
-                        })
-                        .fail(function () {
-                            console.log("fail");
-                        })
-                        .always(function () {
-                            context.locker(false);  //unlock list
-                        });
                     }
                 };
+
                 /// The route name for the displayed departures
                 self.departureRoute = ko.observable('');
                 /// The server time the departures were last updated
@@ -105,26 +115,12 @@
                 self.itemsTrigger = ko.computed(function () {
                     return self.getDepartures(self.selectedRoute());
                 }, this);
+
             }
 
             var model = new BusDepartureViewModel();
             ko.applyBindings(model);
-
-            var jqxhr = $.getJSON("RoutesJson", function (data) {
-                console.log("done");
-            })
-            .done(function (data) {
-                $.each(data.Routes, function (key, value) {
-                    model.addRoute(value);
-                });
-                model.selectedRoute("");
-            })
-            .done(function (data) {
-                //model.addDeparture("one", "two", "three", "four", "five");
-            })
-            .fail(function () {
-                console.log('fail');
-            });
+            model.getRoutes();
         })($, ko);
     </script>
 </body>
