@@ -13,39 +13,10 @@ using System.Web.Mvc;
 
 namespace readingBuses.Controllers
 {
-    // todo move script and view model into shared / partial
-    // finish css
-    // Rename HomeController to Departures
-    // Strip out unnecessary code (bootstrap, etc)
-    // Should route name be an MvcRoute parameter instead of in query string...?
-    // Optimise initial loading time of Departure pages
-    // Optimise route & departure lookup
-
-
-    public class HomeController : AsyncController
+    public class DepartureApiController : Controller
     {
         // yuk
         static readonly Configuration Config = new Configuration();
-
-        public ActionResult Index()
-        {
-            using (var context = new Context())
-            {
-                var model = context.Routes.Select(p => p.Name).ToArray();
-                return View(model);
-            }
-        }
-
-        public ActionResult Departures()
-        {
-            return View();
-        }
-
-        public ActionResult DeparturesForRoute(string name)
-        {
-            var model = new DeparturesForRoute { RouteName = name };
-            return View(model);
-        }
 
         public JsonResult RoutesJson()
         {
@@ -67,16 +38,6 @@ namespace readingBuses.Controllers
                 var model = await GetDepartures(routeName, context);
 
                 return Json(model, JsonRequestBehavior.AllowGet);
-            }
-        }
-
-        public async Task<ActionResult> Summary(string routeName)
-        {
-            using (var context = new Context())
-            {
-                var model = await GetDepartures(routeName, context);
-
-                return View(model);
             }
         }
 
@@ -105,13 +66,12 @@ namespace readingBuses.Controllers
         {
             return new Departure
             {
-                Service = bus.Service, 
+                Service = bus.Service,
                 BusStop = bus.LocationName,
-                DepartsIn = Utility.FriendlyTime(bus.ScheduledDeparture.UtcDateTime - nowUtc) + string.Format(" ({0:HH mm})", bus.ScheduledDeparture), 
+                DepartsIn = Utility.FriendlyTime(bus.ScheduledDeparture.UtcDateTime - nowUtc) + string.Format(" ({0:HH mm})", bus.ScheduledDeparture),
                 Destination = bus.Destination,
                 Reachable = Utility.IsReachable(bus.ScheduledDeparture.UtcDateTime, nowUtc, bus.TravelTimeInMinutes, Config.DepartureMarginInSeconds).ToString()
             };
         }
-      
     }
 }

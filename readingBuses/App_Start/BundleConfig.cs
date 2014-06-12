@@ -33,9 +33,10 @@ namespace readingBuses
                         "~/Content/reset.css",
                         "~/Content/departures.css"));
 
-            bundles.Add(new ScriptBundle("~/bundles/knockoutjs").Include(
+            bundles.Add(new ScriptBundle("~/bundles/departures").Include(
                         "~/Scripts/jquery-{version}.js",
-                        "~/Scripts/knockout-{version}.js"));
+                        "~/Scripts/knockout-{version}.js",
+                        "~/Scripts/departures-{version}.js"));
 
             // Set EnableOptimizations to false for debugging. For more information,
             // visit http://go.microsoft.com/fwlink/?LinkId=301862
