@@ -1,5 +1,6 @@
 ﻿html {
-    font-family: sans-serif;
+    font-family: Verdana, Geneva, sans-serif;
+    font-size: 0.8em;
     -webkit-text-size-adjust: 100%;
     -ms-text-size-adjust: 100%;
     text-align: left;
@@ -7,8 +8,6 @@
 
 body {
     width: 100%;
-    font-family: Verdana, Geneva, sans-serif;
-    font-size: medium;
 }
 
 h1 {
@@ -46,7 +45,7 @@ th, td {
 th {
     background-color: black;
     color: white;
-    font-weight: bold;
+    font-weight: 500;
 }
 tr,
 img {
