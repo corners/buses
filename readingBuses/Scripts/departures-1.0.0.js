@@ -20,9 +20,9 @@ function BusDepartureViewModel(getRoutesApiPath, getDeparturesApiPath) {
         $.getJSON(self.getRoutesApiPath
             ).done(function (data) {
                 $.each(data.Routes, function (key, value) {
-                    model.addRoute(value);
+                    self.addRoute(value);
                 });
-                model.selectedRoute("");
+                self.selectedRoute("");
             }).fail(function () {
                 console.log('fail');
             });
@@ -41,7 +41,7 @@ function BusDepartureViewModel(getRoutesApiPath, getDeparturesApiPath) {
             $.getJSON(self.getDeparturesApiPath, { routeName: route }
                 ).done(function (data) {
                     $.each(data.Departures, function (key, value) {
-                        model.addDeparture(value.DepartsIn, value.Service, value.BusStop, value.Destination, value.Reachable);
+                        self.addDeparture(value.DepartsIn, value.Service, value.BusStop, value.Destination, value.Reachable);
                     });
                     self.departureRoute(data.Route);
                 }).done(function (data) {
