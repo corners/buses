@@ -7,45 +7,35 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
     <title>Reading Bus Departure Times</title>
-    @Styles.Render("~/Content/css2")
+    @Styles.Render("~/Content/css")
 </head>
 <body>
-    @*<h1>
-        Routes
-    </h1>
-    <div>*@
-        @*<select data-bind="options: routes,
-                            value: selectedRoute,
-                            optionsCaption: 'Choose...'" autofocus></select>*@
-        @*<p data-bind="text: selectedRoute() ? selectedRoute() : 'unknown' ">
-            </p>*@
-    @*</div>*@
     <h1>
         @Model.RouteName
     </h1>
     <h2>Departures</h2>
     <div data-bind="if: selectedRoute()">
         <div data-bind="if: !locker()">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Departs</th>
-                        <th>Service</th>
-                        <th>Stop</th>
-                        <th>Destination</th>
-                        <th>Reachable</th>
-                    </tr>
-                </thead>
-                <tbody data-bind="foreach: departures">
-                    <tr>
-                        <td data-bind="text: DepartsIn"></td>
-                        <td data-bind="text: Service"></td>
-                        <td data-bind="text: BusStop"></td>
-                        <td data-bind="text: Destination"></td>
-                        <td data-bind="text: Reachable"></td>
-                    </tr>
-                </tbody>
-            </table>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Departs</th>
+                            <th>Service</th>
+                            <th>Stop</th>
+                            <th>Destination</th>
+                            <th>Reachable</th>
+                        </tr>
+                    </thead>
+                    <tbody data-bind="foreach: departures">
+                        <tr>
+                            <td data-bind="text: DepartsIn"></td>
+                            <td data-bind="text: Service"></td>
+                            <td data-bind="text: BusStop"></td>
+                            <td data-bind="text: Destination"></td>
+                            <td data-bind="text: Reachable"></td>
+                        </tr>
+                    </tbody>
+                </table>
             <p>Updated: <span data-bind="text: lastUpdated"></span></p>
             <button data-bind="click: refreshDepartures">Refresh</button>
         </div>
@@ -53,7 +43,8 @@
             Loading...
         </div>
     </div>
-    @Scripts.Render("~/bundles/departures")
+    @Scripts.Render("~/bundles/scripts")
+
     <script>
     (function ($, ko) {
         var routesApiUrl = '@Url.Action("RoutesJson", "DepartureApi")',
@@ -63,6 +54,6 @@
         ko.applyBindings(model);
         model.selectedRoute('@Model.RouteName');
     })($, ko);
-</script>
+    </script>
 </body>
 </html>
