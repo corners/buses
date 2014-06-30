@@ -20,19 +20,19 @@
                     <thead>
                         <tr>
                             <th>Departs</th>
+                            <th>Minutes</th>
                             <th>Service</th>
                             <th>Stop</th>
                             <th>Destination</th>
-                            <th>Reachable</th>
                         </tr>
                     </thead>
                     <tbody data-bind="foreach: departures">
                         <tr>
+                            <td data-bind="text: Departs, css: Reachable"></td>
                             <td data-bind="text: DepartsIn"></td>
                             <td data-bind="text: Service"></td>
                             <td data-bind="text: BusStop"></td>
                             <td data-bind="text: Destination"></td>
-                            <td data-bind="text: Reachable"></td>
                         </tr>
                     </tbody>
                 </table>
@@ -46,14 +46,14 @@
     @Scripts.Render("~/bundles/scripts")
 
     <script>
-    (function ($, ko) {
+    //(function ($, ko) {
         var routesApiUrl = '@Url.Action("RoutesJson", "DepartureApi")',
             departureApiUrl = '@Url.Action("DeparturesJson", "DepartureApi")';
 
         var model = new BusDepartureViewModel(routesApiUrl, departureApiUrl);
         ko.applyBindings(model);
         model.selectedRoute('@Model.RouteName');
-    })($, ko);
+    //})($, ko);
     </script>
 </body>
 </html>

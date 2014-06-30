@@ -68,6 +68,7 @@ namespace readingBuses.Controllers
             {
                 Service = bus.Service,
                 BusStop = bus.LocationName,
+                DepartsUtc = bus.ScheduledDeparture.UtcDateTime,
                 DepartsIn = Utility.FriendlyTime(bus.ScheduledDeparture.UtcDateTime - nowUtc) + string.Format(" ({0:HH mm})", bus.ScheduledDeparture),
                 Destination = bus.Destination,
                 Reachable = Utility.IsReachable(bus.ScheduledDeparture.UtcDateTime, nowUtc, bus.TravelTimeInMinutes, Config.DepartureMarginInSeconds).ToString()

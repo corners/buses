@@ -174,7 +174,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\DepartureApi\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

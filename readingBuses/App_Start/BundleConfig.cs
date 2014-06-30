@@ -21,6 +21,8 @@ namespace readingBuses
                         "~/Scripts/knockout-{version}.js",
                         "~/Scripts/departures-{version}.js"));
 
+            //Scripts.DefaultTagFormat = @"<script src=""{0}"" async></script>";
+
             // Set EnableOptimizations to false for debugging. For more information,
             // visit http://go.microsoft.com/fwlink/?LinkId=301862
             BundleTable.EnableOptimizations = true;
