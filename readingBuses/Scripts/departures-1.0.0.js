@@ -62,7 +62,7 @@ function BusDepartureViewModel(getRoutesApiPath, getDeparturesApiPath) {
 
     self.stopRefreshingTimes = function () {
         if (self.timer !== null) {
-            self.timer.clearInterval();
+            window.clearInterval(self.timer);
             self.timer = null;
         }
     }
@@ -80,7 +80,6 @@ function BusDepartureViewModel(getRoutesApiPath, getDeparturesApiPath) {
             }
         }
         if (catchable === 0) {
-            console.log("Stopped updating times");
             self.stopRefreshingTimes();
         }
     };
@@ -101,7 +100,7 @@ function BusDepartureViewModel(getRoutesApiPath, getDeparturesApiPath) {
                     });
                     self.departureRoute(data.Route);
                 }).done(function (data) {
-                    self.timer = setInterval(self.refreshTimeToDeparture, 30 * 1000);
+                    self.timer = window.setInterval(self.refreshTimeToDeparture, 30 * 1000);
                 }).done(function (data) {
                     var time_ms = (new Date().getTime()) - start;
                     self.lastUpdated(new Date(parseInt(data.TimeStamp.substr(6))) + '. Data retrieved in ' + time_ms + 'ms');
