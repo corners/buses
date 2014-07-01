@@ -1,15 +1,6 @@
 ﻿@{
-    Layout = null;
+    ViewBag.Title = "Departures";
 }
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width" />
-    <title>Reading Bus Departure Times</title>
-    @Styles.Render("~/Content/css")
-</head>
-<body>
     <h1>
         Routes
     </h1>
@@ -28,19 +19,19 @@
                 <thead>
                     <tr>
                         <th>Departs</th>
+                        <th>Minutes</th>
                         <th>Service</th>
                         <th>Stop</th>
                         <th>Destination</th>
-                        <th>Reachable</th>
                     </tr>
                 </thead>
                 <tbody data-bind="foreach: departures">
                     <tr>
+                        <td data-bind="text: Departs, css: Reachable"></td>
                         <td data-bind="text: DepartsIn"></td>
                         <td data-bind="text: Service"></td>
                         <td data-bind="text: BusStop"></td>
                         <td data-bind="text: Destination"></td>
-                        <td data-bind="text: Reachable"></td>
                     </tr>
                 </tbody>
             </table>
@@ -51,14 +42,17 @@
             Loading...
         </div>
     </div>
+
+@section Scripts {
     @Scripts.Render("~/bundles/scripts")
     <script>
-        var routesApiUrl = '@Url.Action("RoutesJson", "DepartureApi")',
+   (function ($, ko) {
+       var routesApiUrl = '@Url.Action("RoutesJson", "DepartureApi")',
             departureApiUrl = '@Url.Action("DeparturesJson", "DepartureApi")';
 
         var model = new BusDepartureViewModel(routesApiUrl, departureApiUrl);
         ko.applyBindings(model);
         model.getRoutes();
+   })($, ko);
     </script>
-</body>
-</html>
+}

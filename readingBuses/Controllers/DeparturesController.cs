@@ -13,12 +13,6 @@ using System.Web.Mvc;
 
 namespace readingBuses.Controllers
 {
-    // todo move script and view model into shared / partial
-    // finish css
-    // Rename HomeController to Departures
-    // Strip out unnecessary code (bootstrap, etc)
-    // Should route name be an MvcRoute parameter instead of in query string...?
-    // Update times dynamically on page
     // Optimise initial loading time of Departure pages
     // Optimise route & departure lookup
     // Use location to determine time to stop
@@ -38,26 +32,10 @@ namespace readingBuses.Controllers
             }
         }
 
-        //public ActionResult Index()
-        //{
-        //    return View();
-        //}
-
         public ActionResult ForRoute(string id)
         {
             var model = new DeparturesForRoute { RouteName = id };
             return View(model);
         }
-
-        //public async Task<ActionResult> Summary(string routeName)
-        //{
-        //    using (var context = new Context())
-        //    {
-        //        var model = await GetDepartures(routeName, context);
-
-        //        return View(model);
-        //    }
-        //}
-
     }
 }

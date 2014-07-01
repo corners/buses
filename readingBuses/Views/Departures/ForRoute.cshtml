@@ -1,15 +1,7 @@
 ﻿@{
-    Layout = null;
+    ViewBag.Title = "Departures for " + Model.RouteName;
 }
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width" />
-    <title>Reading Bus Departure Times</title>
-    @Styles.Render("~/Content/css")
-</head>
-<body>
+
     <h1>
         @Model.RouteName
     </h1>
@@ -43,17 +35,17 @@
             Loading...
         </div>
     </div>
-    @Scripts.Render("~/bundles/scripts")
 
+@section Scripts {
+    @Scripts.Render("~/bundles/scripts")
     <script>
-    //(function ($, ko) {
+    (function ($, ko) {
         var routesApiUrl = '@Url.Action("RoutesJson", "DepartureApi")',
             departureApiUrl = '@Url.Action("DeparturesJson", "DepartureApi")';
 
         var model = new BusDepartureViewModel(routesApiUrl, departureApiUrl);
         ko.applyBindings(model);
         model.selectedRoute('@Model.RouteName');
-    //})($, ko);
+    })($, ko);
     </script>
-</body>
-</html>
+}
