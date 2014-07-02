@@ -29,6 +29,7 @@
                     </tbody>
                 </table>
             <p>Updated: <span data-bind="text: lastUpdated"></span></p>
+            <p>Download time: <span data-bind="text: lastDownloadTime_ms"></span>ms. Render time: <span data-bind="text: lastRenderTime_ms"></span>ms.</p>
             <button data-bind="click: refreshDepartures">Refresh</button>
         </div>
         <div data-bind="if: locker()">

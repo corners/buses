@@ -94,11 +94,15 @@ function BusDepartureViewModel(getRoutesApiPath, getDeparturesApiPath) {
             context.locker(true); //lock list
             $.getJSON(self.getDeparturesApiPath, { routeName: route }
                 ).done(function (data) {
+                    self.lastDownloadTime_ms((new Date().getTime()) - start);
+                }).done(function (data) {
+                    var renderStart = new Date().getTime();
                     var nowUtc = parseDate(data.TimeStamp);
                     $.each(data.Departures, function (key, value) {
                         self.addDeparture(nowUtc, value.DepartsUtc, value.Service, value.BusStop, value.Destination, value.Reachable);
                     });
                     self.departureRoute(data.Route);
+                    self.lastRenderTime_ms((new Date().getTime()) - renderStart);
                 }).done(function (data) {
                     self.timer = window.setInterval(self.refreshTimeToDeparture, 30 * 1000);
                 }).done(function (data) {
@@ -116,6 +120,8 @@ function BusDepartureViewModel(getRoutesApiPath, getDeparturesApiPath) {
     self.departureRoute = ko.observable('');
     /// The server time the departures were last updated
     self.lastUpdated = ko.observable('');
+    self.lastDownloadTime_ms = ko.observable('');
+    self.lastRenderTime_ms = ko.observable('');
 
     self.refreshDepartures = function () {
         self.getDepartures(self.selectedRoute());
