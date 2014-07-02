@@ -15,32 +15,8 @@
             <h2>
                 Departures
             </h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Departs</th>
-                        <th>Minutes</th>
-                        <th>Service</th>
-                        <th>Stop</th>
-                        <th>Destination</th>
-                    </tr>
-                </thead>
-                <tbody data-bind="foreach: departures">
-                    <tr>
-                        <td data-bind="text: Departs, css: Reachable"></td>
-                        <td data-bind="text: DepartsIn"></td>
-                        <td data-bind="text: Service"></td>
-                        <td data-bind="text: BusStop"></td>
-                        <td data-bind="text: Destination"></td>
-                    </tr>
-                </tbody>
-            </table>
-            <p>Updated: <span data-bind="text: lastUpdated"></span></p>
-            <button data-bind="click: refreshDepartures">Refresh</button>
         </div>
-        <div data-bind="if: locker()">
-            Loading...
-        </div>
+        @Html.Partial("Departures")
     </div>
 
 @section Scripts {

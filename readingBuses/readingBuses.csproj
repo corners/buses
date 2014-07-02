@@ -169,6 +169,7 @@
     <Content Include="Views\Departures\ForRoute.cshtml" />
     <Content Include="Scripts\jquery-2.1.1.min.map" />
     <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Departures\Departures.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
