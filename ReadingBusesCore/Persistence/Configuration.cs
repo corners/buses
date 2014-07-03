@@ -9,7 +9,7 @@ namespace ReadingBusesCore.Persistence
 {
     internal sealed class Configuration : DbMigrationsConfiguration<Context>
     {
-       public Configuration()
+        public Configuration()
         {
             AutomaticMigrationsEnabled = true;
             AutomaticMigrationDataLossAllowed = true;

@@ -9,6 +9,7 @@ using System.Web;
 using System.Web.Mvc;
 using ReadingBusesCore.Entities;
 using ReadingBusesCore.Persistence;
+using ReadingBusesCore.Routes;
 
 namespace readingBuses.Controllers
 {
@@ -67,6 +68,20 @@ namespace readingBuses.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+
+            //// todo move else where
+            //try
+            //{
+            //    var locations = await RouteApi.GetLocations();
+            //    var services = RouteApi.Services(locations);
+            //    var forService = RouteApi.LocationsForService("3", locations);
+            //    //var patterns = await RouteApi.GetServicePatterns();
+            //}
+            //catch (Exception ex)
+            //{
+            //    var s = ex.Message;
+            //}
+
             Route route = await db.Routes.FindAsync(id);
             if (route == null)
             {

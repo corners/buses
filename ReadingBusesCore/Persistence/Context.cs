@@ -5,6 +5,8 @@ using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ReadingBusesCore.Routes.Entities;
+using ReadingBusesCore.Persistence.Entities;
 
 namespace ReadingBusesCore.Persistence
 {
@@ -18,6 +20,12 @@ namespace ReadingBusesCore.Persistence
        { }
 
         public DbSet<Route> Routes { get; set; }
+
+        public DbSet<Location> Locations { get; set; }
+
+        public DbSet<ServicePattern> ServicePatterns { get; set; }
+
+        public DbSet<LastUpdate> LastUpdates { get; set; }
 
         //This is required for auto migrations
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
