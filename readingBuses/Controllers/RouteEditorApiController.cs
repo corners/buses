@@ -43,6 +43,7 @@ namespace readingBuses.Controllers
                                  where detail != null
                                  select new
                                  {
+                                     Id = location.Id,
                                      Name = detail.Name,
                                      Longitude = detail.Longitude,
                                      Latitude = detail.Latitude,

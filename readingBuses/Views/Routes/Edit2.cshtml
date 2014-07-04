@@ -38,6 +38,7 @@
                             value: selectedStop,
                             optionsCaption: 'Choose...'"></select>
             <button data-bind="click: selectNearest">Nearest</button>
+            <p>Location ID <span data-bind="text: selectedStop() ? selectedStop().Id : 'Unknown'"></span></p>
         </div>
         <div>
             <label>Minutes to reach stop: </label>
@@ -45,21 +46,7 @@
         </div>
 
             @*need stop+minutes taken to reach stop, locationid, locn coord, services*@
-
-            @*<div class="form-group">
-                @Html.LabelFor(model => model.TargetStopsJson, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.TargetStopsJson, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.TargetStopsJson, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="form-group">
-                <div class="col-md-offset-2 col-md-10">
-                    <input type="submit" value="Save" class="btn btn-default" />
-                </div>
-            </div>*@
-        </div>
+    </div>
 }
 
 <div>
@@ -113,6 +100,7 @@
                             if (servicePattern !== null) {
                                 $.each(servicePattern.Locations, function (key, value) {
                                     var location = {
+                                        Id: value.Id,
                                         Name: value.Name,
                                         Longitude: value.Longitude,
                                         Latitude: value.Latitude,
@@ -153,7 +141,6 @@
                             .value();
                         
                         self.selectedStop(closest.location);
-                        alert('Closest: ' + closest.location.Name);
                     });
                 }
             };
