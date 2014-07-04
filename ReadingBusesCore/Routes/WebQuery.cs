@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using ReadingBusesCore.Persistence;
 using ReadingBusesCore.Persistence.Entities;
 using ReadingBusesCore.Routes.Entities;
@@ -9,6 +10,7 @@ using System.Net.Http;
 using System.Net.Http.Formatting;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 
 namespace ReadingBusesCore.Routes
 {
@@ -23,6 +25,73 @@ namespace ReadingBusesCore.Routes
         //        var result = await response.Content.ReadAsAsync<GetServicePatternResult>();
         //        return result.Root.ServicePatterns.ToList().AsReadOnly();
         //    }
+        //}
+
+        public async Task<ServicePattern> GetServicePattern(string service)
+        {
+            using (var client = new HttpClient())
+            {
+                // Only seems to support XML
+                var uri = @"api/1/bus/servicepatterns?service=" + service;
+                HttpResponseMessage response = await ReadAsAsync(client, uri);
+                var xml = await response.Content.ReadAsStringAsync();
+                return ParseServicePatterns(xml).FirstOrDefault();
+            }
+        }
+
+        static ServiceLocation ParseServiceLocationNode(XmlNode node)
+        {
+            return new ServiceLocation
+            {
+                Id = node.SelectSingleNode("Id").InnerText,
+                Direction = int.Parse(node.SelectSingleNode("Direction").InnerText),
+                DisplayOrder = int.Parse(node.SelectSingleNode("DisplayOrder").InnerText),
+            };
+        }
+
+        private static List<ServicePattern> ParseServicePatterns(string xml)
+        {
+            var doc = new XmlDocument();
+            doc.LoadXml(xml);
+
+            var xpath = @"//Root/ServicePatterns/ServicePattern";
+            var result = doc.SelectNodes(xpath)
+                            .OfType<XmlNode>()
+                            .Select(node => new ServicePattern
+                            {
+                                ServiceId = node.SelectSingleNode("ServiceId").InnerText,
+                                Locations = node.SelectNodes("Locations/Location")
+                                                .OfType<XmlNode>()
+                                                .Select(ParseServiceLocationNode)
+                                                .ToArray()
+                            })
+                            .ToList();
+
+            return result;                
+        }
+
+        //private static List<Location> ParseServicePatternsResponse(string json)
+        //{
+        //    var obj = JObject.Parse(json);
+        //    var tokens = obj["Root"]["Locations"].ToList();
+        //    var result = (from token in tokens
+        //                  let sp = MapToLocation(token)
+        //                  select sp).ToList();
+        //    return result;
+        //}
+
+        //static Location MapToLocation(JToken obj)
+        //{
+        //    return new Location
+        //    {
+        //        ID = obj["Id"].Value<string>(),
+        //        Bay = obj["Bay"].Value<string>(),
+        //        Latitude = obj["Latitude"].Value<double>(),
+        //        Longitude = obj["Longitude"].Value<double>(),
+        //        Name = obj["Name"].Value<string>(),
+        //        Naptan = obj["Naptan"].Value<string>(),
+        //        Services = obj["Services"].Value<string>(),
+        //    };
         //}
 
         public async Task<IReadOnlyList<Location>> GetLocations()

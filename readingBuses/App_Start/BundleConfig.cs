@@ -21,6 +21,11 @@ namespace readingBuses
                         "~/Scripts/knockout-{version}.js",
                         "~/Scripts/departures-{version}.js"));
 
+            bundles.Add(new ScriptBundle("~/bundles/routes").Include(
+                        "~/Scripts/jquery-{version}.js",
+                        "~/Scripts/knockout-{version}.js",
+                        "~/Scripts/underscore.js"));
+
             //Scripts.DefaultTagFormat = @"<script src=""{0}"" async></script>";
 
             // Set EnableOptimizations to false for debugging. For more information,

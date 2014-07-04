@@ -1,0 +1,186 @@
+﻿@model readingBuses.Models.RouteEditor
+
+@{
+    ViewBag.Title = "Edit2";
+}
+
+<h2>Edit2</h2>
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>Route: <span data-bind="text: ID"></span></h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.ID)
+
+        <div>
+            <label>Direction: </label>
+            <select data-bind="options: directions,
+                                optionsText: 'name',
+                                optionsValue: 'value',
+                                value: selectedDirection,
+                                optionsCaption: 'Choose...'"></select>
+        </div>
+        <div>
+            <label>Service: </label>
+            <select data-bind="options: services,
+                                value: selectedService,
+                                optionsCaption: 'Choose...'" autofocus></select>
+        </div>
+        <div>
+            <label>Stop: </label>
+            <select data-bind="options: stopsForService,
+                           optionsText: 'Name',
+                            value: selectedStop,
+                            optionsCaption: 'Choose...'"></select>
+            <button data-bind="click: selectNearest">Nearest</button>
+        </div>
+        <div>
+            <label>Minutes to reach stop: </label>
+            <input data-bind="value: minutesToStop"/>
+        </div>
+
+            @*need stop+minutes taken to reach stop, locationid, locn coord, services*@
+
+            @*<div class="form-group">
+                @Html.LabelFor(model => model.TargetStopsJson, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.TargetStopsJson, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.TargetStopsJson, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Save" class="btn btn-default" />
+                </div>
+            </div>*@
+        </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/routes")
+    <script>
+    (function ($, ko) {
+
+        function RouteEditorViewModel(id, getServicesUri, getStopsForServiceUri) {
+            var self = this;
+
+            self.ID = id;
+            self.getServicesUri = getServicesUri;
+            self.getStopsForServiceUri = getStopsForServiceUri;
+
+            self.directions = ko.observableArray([{ name: 'Into Reading', value: 1 }, { name: 'Out of Reading', value: 0 }]);
+            self.selectedDirection = ko.observable(1);
+
+            self.services = ko.observableArray([]);
+            self.selectedService = ko.observable();
+
+            self.getServices = function () {
+                self.services([]);
+                var xhdr = $.getJSON(self.getServicesUri, {}
+                    ).done(function () {
+                        console.log("success");
+                    }).done(function (data) {
+                        $.each(data, function (key, value) {
+                            self.services.push(value);
+                        });
+                        self.selectedService("");
+                    }).fail(function () {
+                        console.log("fail");
+                    });
+            };
+
+            self.stopsForService = ko.observableArray([]);
+            self.selectedStop = ko.observable();
+
+            self.getStopsForService = function (service, direction) {
+                self.stopsForService([]);
+                service = service || '';
+                if (service.length > 0) {
+                    var xhdr = $.getJSON(self.getStopsForServiceUri, { service: service, direction: direction }
+                        ).done(function () {
+                            console.log("success");
+                        }).done(function (servicePattern) {
+                            if (servicePattern !== null) {
+                                $.each(servicePattern.Locations, function (key, value) {
+                                    var location = {
+                                        Name: value.Name,
+                                        Longitude: value.Longitude,
+                                        Latitude: value.Latitude,
+                                        Direction: value.Direction,
+                                        DisplayOrder: value.DisplayOrder
+                                    };
+                                    self.stopsForService.push(location);
+                                });
+                            }
+                            self.selectedStop("");
+                        }).fail(function () {
+                            console.log("fail");
+                        });
+                 }
+            };
+
+            self.selectNearest = function () {
+                var calcDistance = function (x, y) {
+                    return Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
+                };
+
+                if ("geolocation" in navigator) {
+                    navigator.geolocation.getCurrentPosition(function (position) {
+                        var lat = position.coords.latitude,
+                            long = position.coords.longitude;
+
+                        var closest = _.chain(self.stopsForService())
+                            .map(function (location) {
+                                return { 
+                                    distance: calcDistance(location.Latitude - lat, location.Longitude - long),
+                                    location: location
+                                };
+                            })
+                            .sortBy(function(locDist) { 
+                                return locDist.distance; 
+                            })
+                            .first()
+                            .value();
+                        
+                        self.selectedStop(closest.location);
+                        alert('Closest: ' + closest.location.Name);
+                    });
+                }
+            };
+
+            self.minutesToStop = ko.observable(0);
+
+            self.selectedService.subscribe(function (newValue) {
+                console.log('selected service is ' + newValue);
+                self.getStopsForService(newValue, self.selectedDirection());
+            }, null, "change");
+
+            self.selectedDirection.subscribe(function (newValue) {
+                console.log('selected direction is ' + newValue);
+                self.getStopsForService(self.selectedService(), newValue);
+            }, null, "change");
+        }
+
+
+        $(document).ready(function () {
+            var getServicesUri = '@Url.Action("GetServicesJson", "RouteEditorApi")',
+                getStopsForServiceUri = '@Url.Action("GetStopsForServiceJson", "RouteEditorApi")';
+
+            var model = new RouteEditorViewModel('@Html.ValueFor(model => model.ID)', getServicesUri, getStopsForServiceUri);
+            ko.applyBindings(model);
+            model.getServices();
+        });
+
+    })($, ko);
+    </script>
+}
