@@ -1,4 +1,5 @@
-﻿using ReadingBusesCore.Routes;
+﻿using ReadingBusesCore;
+using ReadingBusesCore.Routes;
 using ReadingBusesCore.Routes.Entities;
 using System;
 using System.Collections.Generic;
@@ -16,7 +17,7 @@ namespace readingBuses.Controllers
         {
             var locations = await RouteApi.GetLocations();
             var services = RouteApi.Services(locations);
-            var model = services.OrderBy(s => s).ToList();
+            var model = services.OrderBy(s => s, new ServiceComparer()).ToList();
             return Json(model, JsonRequestBehavior.AllowGet);
         }
 
@@ -63,14 +64,14 @@ namespace readingBuses.Controllers
             }
         }
 
-        static string DirectionToString(int direction)
-        {
-            switch (direction)
-            {
-                case 0: return "Out of Rdg";
-                case 1: return "Into Rdg";
-                default: return "";
-            }
-        }
+        //static string DirectionToString(int direction)
+        //{
+        //    switch (direction)
+        //    {
+        //        case 0: return "Out of Rdg";
+        //        case 1: return "Into Rdg";
+        //        default: return "";
+        //    }
+        //}
     }
 }

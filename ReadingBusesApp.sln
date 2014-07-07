@@ -14,6 +14,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{E41F73
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReadingBusesCore.Test", "ReadingBusesCore.Test\ReadingBusesCore.Test.csproj", "{6E057961-E2D3-445B-9D79-96C0AFC19C37}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -28,6 +30,10 @@ Global
 		{AD218C26-459D-40B1-A162-FD285F697EC4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AD218C26-459D-40B1-A162-FD285F697EC4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AD218C26-459D-40B1-A162-FD285F697EC4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6E057961-E2D3-445B-9D79-96C0AFC19C37}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6E057961-E2D3-445B-9D79-96C0AFC19C37}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6E057961-E2D3-445B-9D79-96C0AFC19C37}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6E057961-E2D3-445B-9D79-96C0AFC19C37}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

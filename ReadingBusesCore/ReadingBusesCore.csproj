@@ -84,6 +84,7 @@
     <Compile Include="Routes\Entities\ServicePatternResponseRoot.cs" />
     <Compile Include="Routes\RouteApi.cs" />
     <Compile Include="Routes\WebQuery.cs" />
+    <Compile Include="ServiceComparer.cs" />
     <Compile Include="Utility.cs" />
   </ItemGroup>
   <ItemGroup>
