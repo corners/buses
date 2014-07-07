@@ -1,4 +1,5 @@
-﻿using ReadingBusesCore.Persistence;
+﻿using ReadingBusesCore.Entities;
+using ReadingBusesCore.Persistence;
 using ReadingBusesCore.Persistence.Entities;
 using ReadingBusesCore.Routes.Entities;
 using System;
@@ -22,6 +23,27 @@ namespace ReadingBusesCore.Routes
         //        webQuery.GetServicePatterns, 
         //        context => context.ServicePatterns);
         //}
+
+        public static Route GetRoute(string name)
+        {
+            using (var context = new Context())
+            {
+                var route = context.Routes.Find(name);
+                return route;
+            }
+        }
+
+        public static Route SaveRoute(Route route)
+        {
+            using (var context = new Context())
+            {
+                if (context.Routes.Contains(route))
+                    context.Routes.Remove(route);
+                context.Routes.Add(route);
+                context.SaveChanges();
+                return route;
+            }
+        }
 
         public static async Task<ServicePattern> GetSerivcePattern(string service)
         {
@@ -93,43 +115,9 @@ namespace ReadingBusesCore.Routes
             return records;
         }
         
-        //static async Task<IReadOnlyList<T>> GetDataAsync<T>(
-        //    string table, 
-        //    Func<Task<IReadOnlyList<T>>> webQueryAsync, 
-        //    Func<Context, DbSet<T>> dbsetSelector)
-        //    where T : class
-        //{
-        //    IReadOnlyList<T> records;
-        //    using (var context = new Context())
-        //    {
-        //        var update = context.LastUpdates.Find(table);
-        //        var reload = update == null || (update.Updated - DateTime.UtcNow).TotalDays > MaxDataAge_Days;
-        //        if (reload)
-        //        {
-        //            records = await webQueryAsync();
-
-        //            context.Database.ExecuteSqlCommand("delete from " + table);
-        //            dbsetSelector(context).AddRange(records);
-
-        //            if (update == null)
-        //            {
-        //                update = new LastUpdate { TableName = table };
-        //                context.LastUpdates.Add(update);
-        //            }
-        //            update.Updated = DateTime.UtcNow;
-
-        //            context.SaveChanges();
-        //        }
-        //        else
-        //            records = dbsetSelector(context).ToList().AsReadOnly();
-        //    }
-        //    return records;
-        //}
-
         static bool ForService(string service, Location location)
         {
             return location.ServiceList.Any(s => service.Equals(s, StringComparison.OrdinalIgnoreCase));
         }
-
     }
 }

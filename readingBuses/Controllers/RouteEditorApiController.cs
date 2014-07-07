@@ -1,4 +1,5 @@
 ﻿using ReadingBusesCore;
+using ReadingBusesCore.Entities;
 using ReadingBusesCore.Routes;
 using ReadingBusesCore.Routes.Entities;
 using System;
@@ -13,6 +14,39 @@ namespace readingBuses.Controllers
 {
     public class RouteEditorApiController : Controller
     {
+        public JsonResult GetRoute(string name)
+        {
+            var route = RouteApi.GetRoute(name);
+            var model = route.TargetStops.SelectMany(ts => ts.Services, (ts, s) => new {
+                LocationId = ts.LocationId, 
+                Name = ts.Name, 
+                Longitude = ts.Location.Longitude,
+                Latitude = ts.Location.Latitude,
+                MinutesToLocation = ts.MinutesToLocation, 
+                Services = s,
+            }).ToArray();
+            return Json(model, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult SaveRoute(Route route)
+        {
+            try
+            {
+                var model = RouteApi.SaveRoute(route);
+                return Json(model, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                Response.StatusCode = 400;
+                var error = new Error();
+                error.ErrorID = 123; // todo useful code
+                error.Level = 2; // todo useful level
+                error.Message = ex.Message; // todo useful message
+
+                return Json(error, JsonRequestBehavior.AllowGet);
+            }
+        }
+
         public async Task<JsonResult> GetServicesJson()
         {
             var locations = await RouteApi.GetLocations();

@@ -3,17 +3,14 @@
 @{
     ViewBag.Title = "Edit2";
 }
-
-<h2>Edit2</h2>
-
+<hr />
+<h2>Route: <span data-bind="text: ID"></span></h2>
 
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
 
     <div class="form-horizontal">
-        <h4>Route: <span data-bind="text: ID"></span></h4>
-        <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         @Html.HiddenFor(model => model.ID)
 
@@ -25,6 +22,27 @@
                                 value: selectedDirection,
                                 optionsCaption: 'Choose...'"></select>
         </div>
+        <h3>Stops</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Service</th>
+                    <th>Stop</th>
+                    <th>Minutes to Location</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody data-bind="foreach: targetStops">
+                <tr>
+                    <td data-bind="text: Services"></td>
+                    <td data-bind="text: Name"></td>
+                    <td data-bind="text: MinutesToLocation"></td>
+                    <td><button data-bind="click: $parent.editStop">Edit</button></td>
+                </tr>
+            </tbody>
+        </table>
+
+
         <div>
             <label>Service: </label>
             <select data-bind="options: services,
@@ -58,12 +76,14 @@
     <script>
     (function ($, ko) {
 
-        function RouteEditorViewModel(id, getServicesUri, getStopsForServiceUri) {
+        function RouteEditorViewModel(id, getServicesUri, getStopsForServiceUri, getRouteUri, saveRouteUri) {
             var self = this;
 
             self.ID = id;
             self.getServicesUri = getServicesUri;
             self.getStopsForServiceUri = getStopsForServiceUri;
+            self.getRouteUri = getRouteUri;
+            self.saveRouteUri = saveRouteUri;
 
             self.directions = ko.observableArray([{ name: 'Into Reading', value: 1 }, { name: 'Out of Reading', value: 0 }]);
             self.selectedDirection = ko.observable(1);
@@ -111,7 +131,7 @@
                                 });
                             }
                             self.selectedStop("");
-                        }).fail(function () {
+                        }).fail(function (jqXHR, textStatus, errorThrow) {
                             console.log("fail");
                         });
                  }
@@ -156,15 +176,54 @@
                 console.log('selected direction is ' + newValue);
                 self.getStopsForService(self.selectedService(), newValue);
             }, null, "change");
+
+            self.targetStops = ko.observableArray([]);
+            self.selectedTargetStop = ko.observable("");
+
+            self.getTargetStops = function (route) {
+                self.targetStops([]);
+                var xhdr = $.getJSON(self.getRouteUri, { name: route }
+                    ).done(function () {
+                        console.log("success");
+                    }).done(function (stops) {
+                        if (stops !== null) {
+                            $.each(stops, function (key, value) {
+                                var location = {
+                                    Name: value.Name,
+                                    MinutesToLocation: value.MinutesToLocation,
+                                    LocationId: value.LocationId,
+                                    Longitude: value.Longitude,
+                                    Latitude: value.Latitude,
+                                    Services: value.Services,
+                                };
+                                self.targetStops.push(location);
+                            });
+                        }
+                        self.selectedTargetStop("");
+                    }).fail(function (jqXHR, textStatus, errorThrow) {
+                        console.log("fail");
+                    });
+            };
+
+            self.currentTarget = null;
+            self.editStop = function (data) {
+                self.currentTarget = data;
+            };
         }
 
 
         $(document).ready(function () {
             var getServicesUri = '@Url.Action("GetServicesJson", "RouteEditorApi")',
-                getStopsForServiceUri = '@Url.Action("GetStopsForServiceJson", "RouteEditorApi")';
+                getStopsForServiceUri = '@Url.Action("GetStopsForServiceJson", "RouteEditorApi")',
+                getRouteUri = '@Url.Action("GetRoute", "RouteEditorApi")',
+                saveRouteUri = '@Url.Action("SaveRoute", "RouteEditorApi")';
+            ;
 
-            var model = new RouteEditorViewModel('@Html.ValueFor(model => model.ID)', getServicesUri, getStopsForServiceUri);
+            var routeName = '@Html.ValueFor(model => model.ID)',
+                model = new RouteEditorViewModel(routeName,
+                        getServicesUri, getStopsForServiceUri, getRouteUri, saveRouteUri);
             ko.applyBindings(model);
+            model.getTargetStops(routeName);
             model.getServices();
         });
 
