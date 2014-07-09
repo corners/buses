@@ -1,5 +1,12 @@
 ﻿@model readingBuses.Models.RouteEditor
 
+
+@*
+    TODO 
+- move model logic into row model
+- that should let us to edit rows
+    *@
+
 @{
     ViewBag.Title = "Edit2";
 }
@@ -20,7 +27,7 @@
                                 optionsText: 'name',
                                 optionsValue: 'value',
                                 value: selectedDirection,
-                                optionsCaption: 'Choose...'"></select>
+                                optionsCaption 'Choose...' "></select>
         </div>
         <h3>Stops</h3>
         <table>
@@ -29,15 +36,15 @@
                     <th>Service</th>
                     <th>Stop</th>
                     <th>Minutes to Location</th>
-                    <th></th>
                 </tr>
             </thead>
             <tbody data-bind="foreach: targetStops">
                 <tr>
-                    <td data-bind="text: Services"></td>
+                    <td>
+                        <select data-bind="options: $parent.services, value: Service, valueAllowUnset: true, optionsCaption: 'Choose...'"></select>
+                    </td>
                     <td data-bind="text: Name"></td>
                     <td data-bind="text: MinutesToLocation"></td>
-                    <td><button data-bind="click: $parent.editStop">Edit</button></td>
                 </tr>
             </tbody>
         </table>
@@ -189,12 +196,12 @@
                         if (stops !== null) {
                             $.each(stops, function (key, value) {
                                 var location = {
-                                    Name: value.Name,
-                                    MinutesToLocation: value.MinutesToLocation,
-                                    LocationId: value.LocationId,
-                                    Longitude: value.Longitude,
-                                    Latitude: value.Latitude,
-                                    Services: value.Services,
+                                    Name: ko.observable(value.Name),
+                                    MinutesToLocation: ko.observable(value.MinutesToLocation),
+                                    LocationId: ko.observable(value.LocationId),
+                                    Longitude: ko.observable(value.Longitude),
+                                    Latitude: ko.observable(value.Latitude),
+                                    Service: ko.observable(value.Services),
                                 };
                                 self.targetStops.push(location);
                             });
@@ -223,8 +230,8 @@
                 model = new RouteEditorViewModel(routeName,
                         getServicesUri, getStopsForServiceUri, getRouteUri, saveRouteUri);
             ko.applyBindings(model);
-            model.getTargetStops(routeName);
             model.getServices();
+            model.getTargetStops(routeName);
         });
 
     })($, ko);
