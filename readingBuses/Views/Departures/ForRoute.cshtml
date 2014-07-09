@@ -15,13 +15,15 @@
     @Scripts.Render("~/bundles/knockout")
     @Scripts.Render("~/bundles/departures")
     <script>
-    (function ($, ko) {
-        var routesApiUrl = '@Url.Action("RoutesJson", "DepartureApi")',
-            departureApiUrl = '@Url.Action("DeparturesJson", "DepartureApi")';
+        (function ($, ko) {
+            $(document).ready(function () {
+                var routesApiUrl = '@Url.Action("RoutesJson", "DepartureApi")',
+                    departureApiUrl = '@Url.Action("DeparturesJson", "DepartureApi")';
 
-        var model = new BusDepartureViewModel(routesApiUrl, departureApiUrl);
-        ko.applyBindings(model);
-        model.selectedRoute('@Model.RouteName');
-    })($, ko);
+                var model = new BusDepartureViewModel(routesApiUrl, departureApiUrl);
+                ko.applyBindings(model);
+                model.selectedRoute('@Model.RouteName');
+            });
+        })($, ko);
     </script>
 }
